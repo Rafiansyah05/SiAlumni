@@ -44,21 +44,39 @@
                                 placeholder="nama@sialumni.ac.id" required>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" style="position: relative;">
                             <label for="password">Password</label>
                             <input type="password" id="password" name="password" class="form-control"
                                 placeholder="••••••••" required>
+                            <span toggle="#password" class="fa-solid fa-eye-slash toggle-password"
+                                style="position:absolute; right:12px; top:38px; cursor:pointer; font-size:1.2rem; color: var(--text-muted);"></span>
                         </div>
+                        <script>
+                            document.querySelectorAll('.toggle-password').forEach(function (el) {
+                                el.addEventListener('click', function () {
+                                    const input = document.querySelector(this.getAttribute('toggle'));
+                                    if (input.type === 'password') {
+                                        input.type = 'text';
+                                        this.classList.remove('fa-eye-slash');
+                                        this.classList.add('fa-eye');
+                                    } else {
+                                        input.type = 'password';
+                                        this.classList.remove('fa-eye');
+                                        this.classList.add('fa-eye-slash');
+                                    }
+                                });
+                            });
+                        </script>
+                        <style>
+                            .form-group input[type='password'] {
+                                padding-right: 2.5rem;
+                            }
+                        </style>
+
 
                         <div
                             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                            <label
-                                style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; cursor: pointer;">
-                                <input type="checkbox" style="width: 16px; height: 16px;"> Ingat saya
-                            </label>
-                            <a href="#"
-                                style="font-size: 14px; font-weight: 600; color: var(--primary); text-decoration: none;">Lupa
-                                password?</a>
+
                         </div>
 
                         <button type="submit" class="btn btn-primary">Masuk ke Sistem</button>

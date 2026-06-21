@@ -1,5 +1,9 @@
 package models;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Collections;
+
 import interfaces.Searching;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -239,54 +243,35 @@ public class Admin extends User implements Searching {
     }
 
    
-    public int getTotalAlumni() {
+    /**
+    * Retrieve aggregated dashboard statistics in a single query to reduce round trips.
+    * Returns a map with keys: "totalAlumni", "alumniAktif", "emailSent".
+    */
+    public Map<String, Integer> getDashboardStats() {
         try {
             connect();
-            if (conn == null) return 0;
-            String sql = "SELECT COUNT(*) FROM alumni";
+            if (conn == null) return Collections.emptyMap();
+            String sql = "SELECT (SELECT COUNT(*) FROM alumni) AS total_alumni, "
+                    + "(SELECT COUNT(DISTINCT id_alumni) FROM job_experience WHERE end_date IS NULL) AS alumni_aktif, "
+                    + "(SELECT COUNT(*) FROM email_notifications WHERE status = 'sent' "
+                    + "AND DATE_TRUNC('month', sent_at) = DATE_TRUNC('month', NOW())) AS email_sent";
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) return rs.getInt(1);
+            if (rs.next()) {
+                Map<String, Integer> map = new HashMap<>();
+                map.put("totalAlumni", rs.getInt("total_alumni"));
+                map.put("alumniAktif", rs.getInt("alumni_aktif"));
+                map.put("emailSent", rs.getInt("email_sent"));
+                return map;
+            }
         } catch (SQLException e) {
-            System.out.println("Error getTotalAlumni: " + e.getMessage());
+            System.out.println("Error getDashboardStats: " + e.getMessage());
         } finally {
             disconnect();
         }
-        return 0;
+        return Collections.emptyMap();
     }
 
-    public int getAlumniAktifBekerja() {
-        try {
-            connect();
-            if (conn == null) return 0;
-            String sql = "SELECT COUNT(DISTINCT id_alumni) FROM job_experience WHERE end_date IS NULL";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) return rs.getInt(1);
-        } catch (SQLException e) {
-            System.out.println("Error getAlumniAktifBekerja: " + e.getMessage());
-        } finally {
-            disconnect();
-        }
-        return 0;
-    }
-
-    public int getEmailTerkirimBulanIni() {
-        try {
-            connect();
-            if (conn == null) return 0;
-            String sql = "SELECT COUNT(*) FROM email_notifications "
-                       + "WHERE status = 'sent' AND DATE_TRUNC('month', sent_at) = DATE_TRUNC('month', NOW())";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) return rs.getInt(1);
-        } catch (SQLException e) {
-            System.out.println("Error getEmailTerkirim: " + e.getMessage());
-        } finally {
-            disconnect();
-        }
-        return 0;
-    }
 
    
     private String[] buildStatus(Timestamp createdAt, Timestamp lastTouch) {

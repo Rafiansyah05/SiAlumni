@@ -19,7 +19,7 @@
             <div class="dashboard-container">
                 <!-- Sidebar (Sama dengan dashboard) -->
                 <aside class="sidebar">
-                    <div class="sidebar-logo">Si<span>Alumni</span>.</div>
+                    <div class="sidebar-logo">SiAlumni</div>
                     <ul class="nav-menu">
                         <li class="nav-item">
                             <a href="${pageContext.request.contextPath}/admin/dashboard" class="nav-link">
@@ -88,10 +88,8 @@
                             <select name="status" class="form-control" style="height: 48px; min-width: 180px;">
                                 <option value="all" ${statusFilter=='all' ? 'selected' : '' }>Semua Status</option>
                                 <option value="aktif" ${statusFilter=='aktif' ? 'selected' : '' }>Terbaru</option>
-                                <option value="perlu_update" ${statusFilter=='perlu_update' ? 'selected' : '' }>Perlu
-                                    Diperbarui</option>
                                 <option value="belum_update" ${statusFilter=='belum_update' ? 'selected' : '' }>Belum
-                                    Update</option>
+                                    Diperbarui</option>
                             </select>
                             <button type="submit" class="btn btn-primary"
                                 style="width: 80px; height: 48px;font-size: 14px;font-weight: 600; padding: 0 24px;">Cari</button>

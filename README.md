@@ -4,8 +4,8 @@ Aplikasi web Alumni Management System berbasis Java, Servlet, dan JSP.
 
 ## Prerequisites
 
-- Java 11+ (sudah terinstall)
-- Maven 3.9.6 (sudah ada di folder `.maven/`)
+- Java 11+
+- Maven 3.9.6 (ada di folder `.maven/`)
 
 ## Struktur Project
 
@@ -43,10 +43,10 @@ build.cmd
 mvn tomcat7:run
 ```
 
-Atau gunakan script:
+Atau gunakan script (Linux/macOS):
 
 ```bash
-run.cmd
+./run.sh
 ```
 
 Aplikasi akan berjalan di: **http://localhost:8080**
@@ -68,7 +68,12 @@ Konfigurasi database ada di `src/main/webapp/WEB-INF/web.xml`:
 </context-param>
 ```
 
-**Database**: PostgreSQL (Supabase)
+**Database**: PostgreSQL (Supabase) – Relational DB (Supabase), no framework used.
+
+**Credentials**
+- **Admin**: email `admin2@sialumni.ac.id`, password `admin123`
+- **Alumni**: email `alumni02@sialumni.ac.id`, password `alumni123`
+
 
 ## Dependencies
 

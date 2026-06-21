@@ -81,9 +81,10 @@ public class AdminController extends HttpServlet {
     private void showDashboard(HttpServletRequest request, HttpServletResponse response, Admin admin)
             throws ServletException, IOException {
 
-        int totalAlumni      = admin.getTotalAlumni();
-        int alumniAktif      = admin.getAlumniAktifBekerja();
-        int emailTerkirim    = admin.getEmailTerkirimBulanIni();
+        Map<String, Integer> stats = admin.getDashboardStats();
+        int totalAlumni = stats.getOrDefault("totalAlumni", 0);
+        int alumniAktif = stats.getOrDefault("alumniAktif", 0);
+        int emailTerkirim = stats.getOrDefault("emailSent", 0);
 
         // Fetch only the first 10 alumni for dashboard overview (efficient paginated query)
         List<Alumni> recentAlumni = admin.getDaftarAlumniPaginated(0, 10);

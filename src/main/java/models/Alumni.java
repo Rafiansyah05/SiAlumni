@@ -228,13 +228,76 @@ public class Alumni extends User implements Searching {
             && getEmail() != null && !getEmail().isEmpty();
     }
 
+    /**
+     * Returns true if the alumni has at least one job experience recorded.
+     */
+    public boolean hasJobHistory() {
+        return countJobs() > 0;
+    }
+
   
-    @Override
-    public String getProfile() {
-        return "Alumni: " + getName()
-             + " | Jurusan: " + major
-             + " | Tahun Masuk: " + enrollmentYear
-             + " | Total Pekerjaan: " + jumlahJob;
+
+
+    /**
+     * Fetch recent job experiences limited by count.
+     */
+    public List<JobExperience> getRecentJobExperience(int limit) {
+        List<JobExperience> list = new ArrayList<>();
+        try {
+            connect();
+            if (conn == null) return list;
+            String sql = "SELECT j.*, c.name as company_name, c.location as company_location "
+                       + "FROM job_experience j "
+                       + "JOIN companies c ON j.id_company = c.id_company "
+                       + "WHERE j.id_alumni = ? "
+                       + "ORDER BY j.start_date DESC LIMIT ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, getIdUser());
+            ps.setInt(2, limit);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Company company = new Company();
+                company.setIdCompany(rs.getString("id_company"));
+                company.setName(rs.getString("company_name"));
+                company.setLocation(rs.getString("company_location"));
+                JobExperience job = new JobExperience();
+                job.setIdJobExperience(rs.getString("id_job"));
+                job.setIndustri(rs.getString("industri"));
+                job.setJabatan(rs.getString("jabatan"));
+                job.setCompany(company);
+                job.setStartDate(rs.getDate("start_date"));
+                job.setEndDate(rs.getDate("end_date"));
+                list.add(job);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getRecentJobExperience: " + e.getMessage());
+        } finally {
+            disconnect();
+        }
+        return list;
+    }
+
+    /**
+     * Count active (ongoing) jobs for this alumni.
+     */
+    public int countActiveJobs() {
+        int count = 0;
+        try {
+            connect();
+            if (conn == null) return 0;
+            String sql = "SELECT COUNT(*) AS cnt FROM job_experience WHERE id_alumni = ? AND end_date IS NULL";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, getIdUser());
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt("cnt");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error countActiveJobs: " + e.getMessage());
+        } finally {
+            disconnect();
+        }
+        return count;
     }
 
    
@@ -262,6 +325,28 @@ public class Alumni extends User implements Searching {
     // public String getLastUpdateHumanReadable() { return lastUpdateHumanReadable; }
     // public void setLastUpdateHumanReadable(String lastUpdateHumanReadable) { this.lastUpdateHumanReadable = lastUpdateHumanReadable; }
 
+        /**
+     * Count total jobs for this alumni using a lightweight query.
+     */
+    public int countJobs() {
+        int total = 0;
+        try {
+            connect();
+            if (conn == null) return 0;
+            String sql = "SELECT COUNT(*) AS cnt FROM job_experience WHERE id_alumni = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, getIdUser());
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                total = rs.getInt("cnt");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error countJobs: " + e.getMessage());
+        } finally {
+            disconnect();
+        }
+        return total;
+    }
     public ArrayList<JobExperience> getJobExperienceList() { return jobExperience; }
     public void setJobExperienceList(ArrayList<JobExperience> j) { this.jobExperience = j; }
 }

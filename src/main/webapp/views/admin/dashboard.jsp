@@ -20,7 +20,7 @@
                 <!-- Sidebar -->
                 <aside class="sidebar">
                     <div class="sidebar-logo">
-                        Si<span>Alumni</span>.
+                        SiAlumni
                     </div>
 
                     <ul class="nav-menu">
@@ -74,7 +74,7 @@
                             <span class="label">TOTAL ALUMNI</span>
                             <div class="value">${totalAlumni}</div>
                             <div style="margin-top: 10px; font-size: 12px; color: var(--success);">
-                                <i class="fas fa-arrow-up"></i> +12 bulan ini
+                                Orang telah lulus dari kampus ini
                             </div>
                         </div>
                         <div class="stat-card">

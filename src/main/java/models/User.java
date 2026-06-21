@@ -62,7 +62,7 @@ public class User extends JDBC implements GenerateID {
         try {
             connect();
             if (conn == null) return false;
-            String sql = "SELECT * FROM users WHERE email = ?";
+            String sql = "SELECT id_user, name, email, password, role FROM users WHERE email = ? LIMIT 1";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
@@ -70,7 +70,7 @@ public class User extends JDBC implements GenerateID {
             if (rs.next()) {
                 String dbPassword = rs.getString("password");
                 String hashedPassword = hashPassword(password);
-                
+
                 if (dbPassword.equals(hashedPassword) || dbPassword.equals(password)) {
                     this.idUser   = rs.getString("id_user");
                     this.name     = rs.getString("name");

@@ -33,10 +33,38 @@ public class JobExperience extends JDBC implements GenerateID {
     }
 
     
-    @Override
-    public String generateID() {
-        return UUID.randomUUID().toString();
+        @Override
+public String generateID() {
+    // Generate ID in format job-xxx where xxx starts from 010 and increments sequentially
+    try {
+        // Ensure connection is available
+        connect();
+        if (conn == null) return "job-010"; // fallback if connection fails
+        String sql = "SELECT id_job FROM job_experience ORDER BY id_job DESC LIMIT 1";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        int nextNum = 10; // start from 010
+        if (rs.next()) {
+            String lastId = rs.getString("id_job");
+            if (lastId != null && lastId.startsWith("job-")) {
+                try {
+                    int num = Integer.parseInt(lastId.substring(4));
+                    nextNum = num + 1;
+                } catch (NumberFormatException e) {
+                    // ignore and use default
+                }
+            }
+        }
+        rs.close();
+        ps.close();
+        disconnect();
+        return "job-" + String.format("%03d", nextNum);
+    } catch (Exception e) {
+        System.out.println("Error generating job ID: " + e.getMessage());
+        return "job-010";
     }
+}
+    
 
     
     public boolean insert(String idAlumni) {

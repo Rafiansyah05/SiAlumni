@@ -63,11 +63,34 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" style="position: relative;">
                             <label for="password">Password</label>
                             <input type="password" id="password" name="password" class="form-control"
                                 placeholder="Buat password baru" required>
+                            <span toggle="#password" class="fa-solid fa-eye-slash toggle-password"
+                                style="position:absolute; right:10px; top:38px; cursor:pointer; font-size:1.2rem; color: var(--text-muted);"></span>
                         </div>
+                        <script>
+                            document.querySelectorAll('.toggle-password').forEach(function (el) {
+                                el.addEventListener('click', function () {
+                                    const input = document.querySelector(this.getAttribute('toggle'));
+                                    if (input.type === 'password') {
+                                        input.type = 'text';
+                                        this.classList.remove('fa-eye-slash');
+                                        this.classList.add('fa-eye');
+                                    } else {
+                                        input.type = 'password';
+                                        this.classList.remove('fa-eye');
+                                        this.classList.add('fa-eye-slash');
+                                    }
+                                });
+                            });
+                        </script>
+                        <style>
+                            .form-group input[type='password'] {
+                                padding-right: 2.5rem;
+                            }
+                        </style>
 
                         <button type="submit" class="btn btn-gold">Daftar Sekarang</button>
                     </form>

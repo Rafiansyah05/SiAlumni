@@ -10,6 +10,10 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.*;
 import java.util.UUID;
+import java.util.List;
+import java.util.ArrayList;
+import models.JobExperience;
+import models.Company;
 
 
 @WebServlet("/auth")
@@ -78,9 +82,15 @@ public class AuthController extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/admin/dashboard");
                 return;
             } else if ("alumni".equals(loginUser.getRole())) {
-                Alumni alumni = new Alumni(loginUser.getIdUser(), loginUser.getName(), loginUser.getEmail(), loginUser.getPassword(), null, 0, 0);
+                // Load alumni details and set session
+                Alumni alumni = new Alumni();
+                alumni.setIdUser(loginUser.getIdUser());
+                alumni.setName(loginUser.getName());
+                alumni.setEmail(loginUser.getEmail());
+                alumni.setPassword(loginUser.getPassword());
+                alumni.setRole("alumni");
+                // Retrieve additional alumni data (enrollment year, major, job count)
                 alumni = getAlumniData(alumni);
-               
                 HttpSession session = request.getSession();
                 session.setAttribute("user", alumni);
                 session.setAttribute("role", "alumni");
@@ -89,6 +99,8 @@ public class AuthController extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/alumni/dashboard");
                 return;
             }
+
+
         }
 
    

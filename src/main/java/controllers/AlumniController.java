@@ -9,6 +9,7 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.List;
 
 
 @WebServlet("/alumni/*")
@@ -44,10 +45,8 @@ public class AlumniController extends HttpServlet {
 
         if (pathInfo.equals("/dashboard")) {
             showDashboard(request, response, alumni);
-        } else if (pathInfo.equals("/profile")) {
+        } else if ("/profile".equals(pathInfo) || "/jobs".equals(pathInfo)) {
             showProfile(request, response, alumni);
-        } else if (pathInfo.equals("/jobs")) {
-            showJobs(request, response, alumni);
         } else {
             response.sendRedirect(request.getContextPath() + "/alumni/dashboard");
         }
@@ -76,22 +75,16 @@ public class AlumniController extends HttpServlet {
 
     private void showDashboard(HttpServletRequest request, HttpServletResponse response, Alumni alumni)
             throws ServletException, IOException {
-        
-        ArrayList<JobExperience> jobs = alumni.getJobExperience();
-        ArrayList<JobExperience> recentJobs = new ArrayList<>();
-        for (int i = 0; i < Math.min(3, jobs.size()); i++) {
-            recentJobs.add(jobs.get(i));
-        }
-
-       
-        int aktifCount = 0;
-        for (JobExperience job : jobs) {
-            if (job.isAktif()) aktifCount++;
-        }
+        // Fetch recent job experiences (limit 3) efficiently
+        List<JobExperience> recentJobs = alumni.getRecentJobExperience(3);
+        // Total number of jobs for the alumni (count query)
+        int totalJobs = alumni.countJobs();
+        // Number of active (ongoing) jobs
+        int aktifJobs = alumni.countActiveJobs();
 
         request.setAttribute("jobs", recentJobs);
-        request.setAttribute("totalJobs", jobs.size());
-        request.setAttribute("aktifJobs", aktifCount);
+        request.setAttribute("totalJobs", totalJobs);
+        request.setAttribute("aktifJobs", aktifJobs);
         request.setAttribute("profileComplete", alumni.isProfileComplete());
         request.getRequestDispatcher("/views/alumni/dashboard.jsp").forward(request, response);
     }
@@ -209,31 +202,43 @@ public class AlumniController extends HttpServlet {
         String newPass  = request.getParameter("new_password");
 
         
+        // Update basic fields
         if (name != null && !name.isEmpty()) alumni.setName(name);
         if (email != null && !email.isEmpty()) alumni.setEmail(email);
         if (major != null && !major.isEmpty()) alumni.setMajor(major);
 
-        try {
-            if (yearStr != null && !yearStr.isEmpty()) {
-                alumni.setEnrollmentYear(Integer.parseInt(yearStr));
+        // Parse enrollment year safely
+        if (yearStr != null && !yearStr.isEmpty()) {
+            try {
+                int year = Integer.parseInt(yearStr.trim());
+                if (year > 0) {
+                    alumni.setEnrollmentYear(year);
+                }
+            } catch (NumberFormatException e) {
+                // Invalid year input, ignore or log
+                System.out.println("Invalid enrollment year: " + yearStr);
             }
-        } catch (NumberFormatException e) { }
+        }
 
+        // Update alumni details in DB
         alumni.updateAlumni();
-        
-        // Update session
+
+        // Update session with refreshed alumni object
         request.getSession().setAttribute("user", alumni);
 
+        // Handle password change if provided
         if (newPass != null && !newPass.isEmpty()) {
             alumni.setPassword(newPass);
             alumni.updatePassword(newPass);
         }
 
+        // Prepare attributes for profile view
         request.setAttribute("user", alumni);
         request.setAttribute("success", "Profil berhasil diperbarui");
         request.setAttribute("profileComplete", alumni.isProfileComplete());
         ArrayList<JobExperience> jobs = alumni.getJobExperience();
         request.setAttribute("jobs", jobs);
         request.getRequestDispatcher("/views/alumni/profile.jsp").forward(request, response);
+
     }
 }

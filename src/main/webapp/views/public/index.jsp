@@ -50,15 +50,7 @@
                             Jelajahi karir alumni terbaik kami, temukan peluang kolaborasi, dan bangun jaringan
                             profesional yang kuat
                         </p>
-                        <div class="hero-cta">
-                            <a href="/auth" class="btn btn-primary btn-lg">
-                                Daftar Sekarang
-                            </a>
-                            <a href="#companies" class="btn btn-outline btn-lg"
-                                style="border: 2px solid rgb(95, 100, 138);">
-                                Lihat Perusahaan
-                            </a>
-                        </div>
+
                     </div>
                     <div class="hero-stats">
                         <div class="hero-stat-item">
@@ -492,7 +484,7 @@
                             <p class="cta-subtitle">Bergabunglah dengan ribuan alumni yang telah meraih kesuksesan
                                 bersama SiAlumni</p>
                             <div class="cta-buttons">
-                                <a href="/auth" class="btn btn-primary btn-lg">
+                                <a href="/views/auth/register.jsp" class="btn btn-primary btn-lg">
                                     Daftar Sebagai Alumni
                                 </a>
                                 <a href="#" class="btn btn-outline-light btn-lg"

@@ -4,111 +4,137 @@ Aplikasi web Alumni Management System berbasis Java, Servlet, dan JSP.
 
 ## Prerequisites
 
-- Java 11+
-- Maven 3.9.6 (ada di folder `.maven/`)
+Sebelum menjalankan aplikasi, pastikan perangkat telah memiliki:
+
+* Java 11 atau lebih baru
+* Bash Terminal (Git Bash untuk Windows atau Terminal pada Linux/macOS)
+
+> Maven telah disediakan di dalam proyek sehingga tidak diperlukan instalasi Maven secara terpisah.
+
+---
 
 ## Struktur Project
 
-```
+```text
 src/
 ├── main/
 │   ├── java/
 │   │   ├── controllers/     # Servlet Controllers
 │   │   ├── models/          # Database Models
-│   │   ├── interfaces/      # Interface definitions
-│   │   └── utils/           # Utility classes
+│   │   ├── interfaces/      # Interface Definitions
+│   │   └── utils/           # Utility Classes
 │   └── webapp/
-│       ├── views/           # JSP files
-│       ├── assets/          # CSS, JS, Images
-│       └── WEB-INF/         # Configuration files
+│       ├── views/           # JSP Files
+│       ├── assets/          # CSS, JavaScript, Images
+│       └── WEB-INF/         # Configuration Files
 ```
 
-## Build & Run
+---
 
-### 1. Build Project
+## Instalasi
+
+Clone repository:
 
 ```bash
-mvn clean package -DskipTests
+git clone https://github.com/[username]/[repository-name]
+cd [repository-name]
 ```
 
-Atau gunakan script:
+---
 
-```bash
-build.cmd
-```
+## Menjalankan Aplikasi
 
-### 2. Run dengan Tomcat7 Maven Plugin
-
-```bash
-mvn tomcat7:run
-```
-
-Atau gunakan script (Linux/macOS):
+1. Buka terminal yang mendukung Bash (Git Bash pada Windows atau Terminal pada Linux/macOS).
+2. Pastikan berada pada root directory proyek.
+3. Jalankan perintah berikut:
 
 ```bash
 ./run.sh
 ```
 
-Aplikasi akan berjalan di: **http://localhost:8080**
+4. Tunggu hingga proses build dan deployment selesai.
+5. Buka browser dan akses:
 
-### 3. Compile Tanpa Packaging
-
-```bash
-mvn clean compile
+```text
+http://localhost:8080
 ```
 
-## Database Connection
+---
 
-Konfigurasi database ada di `src/main/webapp/WEB-INF/web.xml`:
+## Database
 
-```xml
-<context-param>
-    <param-name>db.url</param-name>
-    <param-value>jdbc:postgresql://db.tereexilkchduyiclgoy.supabase.co:6543/postgres?sslmode=require</param-value>
-</context-param>
-```
+SiAlumni menggunakan database PostgreSQL yang dihosting secara online melalui Supabase.
 
-**Database**: PostgreSQL (Supabase) – Relational DB (Supabase), no framework used.
+Seluruh konfigurasi koneksi database telah terintegrasi ke dalam aplikasi sehingga pengguna tidak perlu melakukan konfigurasi database, membuat database lokal, maupun mengimpor file SQL sebelum menjalankan sistem.
 
-**Credentials**
-- **Admin**: email `admin2@sialumni.ac.id`, password `admin123`
-- **Alumni**: email `alumni02@sialumni.ac.id`, password `alumni123`
+Setelah aplikasi dijalankan, sistem akan secara otomatis terhubung ke database yang telah disediakan.
 
+---
+
+## Akun Demo
+
+### Admin
+
+* Email: `admin2@sialumni.ac.id`
+* Password: `admin123`
+
+### Alumni
+
+* Email: `alumni02@sialumni.ac.id`
+* Password: `alumni123`
+
+---
 
 ## Dependencies
 
-- PostgreSQL JDBC Driver (42.6.0)
-- Servlet API 4.0.1
-- JSP API 2.3.3
-- JSTL 1.2
+* PostgreSQL JDBC Driver 42.6.0
+* Servlet API 4.0.1
+* JSP API 2.3.3
+* JSTL 1.2
+
+---
 
 ## Troubleshooting
 
-### Port 8080 sudah terpakai?
+### Port 8080 Sedang Digunakan
 
-Edit `pom.xml` dan ubah port di plugin `tomcat7-maven-plugin`:
+Edit file `pom.xml` dan ubah konfigurasi port pada plugin Tomcat:
 
 ```xml
 <configuration>
     <path>/</path>
-    <port>8081</port>  <!-- Ganti dengan port lain -->
+    <port>8081</port>
 </configuration>
 ```
 
-### Maven tidak ditemukan?
+Kemudian akses aplikasi melalui:
 
-Pastikan Anda berada di folder project dan jalankan:
-
-```bash
-.\run.cmd
+```text
+http://localhost:8081
 ```
+
+---
 
 ## Development
 
-Untuk development, edit file di `src/main/java/` dan `src/main/webapp/`, kemudian rebuild dengan Maven.
+Untuk melakukan pengembangan:
+
+* Source code Java berada pada `src/main/java/`
+* JSP berada pada `src/main/webapp/views/`
+* Asset statis berada pada `src/main/webapp/assets/`
+
+Setelah melakukan perubahan, jalankan kembali:
+
+```bash
+./run.sh
+```
+
+---
 
 ## Build Output
 
-- **WAR file**: `target/SiAlumni-1.0-SNAPSHOT.war`
-- **Classes**: `target/classes/`
-- **Exploded WAR**: `target/SiAlumni-1.0-SNAPSHOT/`
+Output hasil build akan tersimpan pada:
+
+* WAR File: `target/SiAlumni-1.0-SNAPSHOT.war`
+* Compiled Classes: `target/classes/`
+* Exploded WAR: `target/SiAlumni-1.0-SNAPSHOT/`

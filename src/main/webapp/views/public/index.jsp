@@ -22,7 +22,7 @@
             <nav class="navbar">
                 <div class="container navbar-container">
                     <div class="navbar-brand">
-                        <i class="fas fa-graduation-cap navbar-icon"></i>
+
                         <div>
                             <div class="navbar-title">Si<span>Alumni</span>.</div>
                             <div class="navbar-subtitle">Alumni Network</div>

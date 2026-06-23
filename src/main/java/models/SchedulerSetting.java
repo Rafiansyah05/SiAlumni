@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 public class SchedulerSetting extends JDBC {
     private boolean enabled;
     private int intervalValue;
-    private String intervalUnit; // "days" or "hours"
+    private String intervalUnit; 
     private String subject;
     private String body;
     private Timestamp lastRun;
@@ -92,7 +92,7 @@ public class SchedulerSetting extends JDBC {
                 ps.executeUpdate();
             }
             
-            // Insert default setting if empty
+        
             String checkSql = "SELECT COUNT(*) FROM scheduler_settings";
             try (PreparedStatement ps = conn.prepareStatement(checkSql);
                  ResultSet rs = ps.executeQuery()) {
@@ -108,7 +108,6 @@ public class SchedulerSetting extends JDBC {
         }
     }
 
-    // Getters and Setters
     public boolean isEnabled() { return enabled; }
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
 

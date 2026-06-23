@@ -32,7 +32,6 @@ public abstract class JDBC {
         config.setPassword(DB_PASS);
         config.setDriverClassName("org.postgresql.Driver");
         
-        // Optimasi Pool
         config.setMaximumPoolSize(10);
         config.setMinimumIdle(2);
         config.setConnectionTimeout(30000);
@@ -42,7 +41,6 @@ public abstract class JDBC {
         dataSource = new HikariDataSource(config);
     }
 
-    // Dynamic Proxy for backward compatibility and thread-safety
     protected final Connection conn = (Connection) java.lang.reflect.Proxy.newProxyInstance(
         Connection.class.getClassLoader(),
         new Class<?>[]{Connection.class},

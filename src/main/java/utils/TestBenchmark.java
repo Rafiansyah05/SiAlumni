@@ -9,21 +9,18 @@ public class TestBenchmark {
         try {
             long totalStart = System.currentTimeMillis();
 
-            // 1. Connection creation time
             long start = System.currentTimeMillis();
             java.sql.Connection conn = models.JDBC.getConnection();
             long connTime = System.currentTimeMillis() - start;
             System.out.println("Raw connection creation time: " + connTime + " ms");
             conn.close();
 
-            // 2. User login
             start = System.currentTimeMillis();
             User user = new User();
             boolean loggedIn = user.login("admin2@sialumni.ac.id", "admin123");
             long loginTime = System.currentTimeMillis() - start;
             System.out.println("Login processing time (success=" + loggedIn + "): " + loginTime + " ms");
 
-            // 3. Admin dashboard stats
             Admin admin = new Admin();
             admin.setIdUser("admin-002");
             admin.setName("Admin Baru");
@@ -36,7 +33,6 @@ public class TestBenchmark {
             System.out.println("Alumni Aktif: " + stats.getOrDefault("alumniAktif", 0));
             System.out.println("Email Sent: " + stats.getOrDefault("emailSent", 0));
 
-            // 4. Admin fetch list
             start = System.currentTimeMillis();
             admin.getDaftarAlumni();
             long fetchAllTime = System.currentTimeMillis() - start;

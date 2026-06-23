@@ -41,7 +41,7 @@
                         <div class="form-group">
                             <label for="email">Email Kampus</label>
                             <input type="email" id="email" name="email" class="form-control"
-                                placeholder="nim@sialumni.ac.id" required>
+                                placeholder="nama@sialumni.ac.id" required>
                         </div>
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">

@@ -75,11 +75,9 @@ public class AlumniController extends HttpServlet {
 
     private void showDashboard(HttpServletRequest request, HttpServletResponse response, Alumni alumni)
             throws ServletException, IOException {
-        // Fetch recent job experiences (limit 3) efficiently
+
         List<JobExperience> recentJobs = alumni.getRecentJobExperience(3);
-        // Total number of jobs for the alumni (count query)
         int totalJobs = alumni.countJobs();
-        // Number of active (ongoing) jobs
         int aktifJobs = alumni.countActiveJobs();
 
         request.setAttribute("jobs", recentJobs);
@@ -175,7 +173,6 @@ public class AlumniController extends HttpServlet {
         job.setIdJobExperience(idJob);
         job.update();
 
-        // refresh job list in alumni object and update session
         alumni.getJobExperience();
         request.getSession().setAttribute("user", alumni);
 
@@ -202,12 +199,11 @@ public class AlumniController extends HttpServlet {
         String newPass  = request.getParameter("new_password");
 
         
-        // Update basic fields
+       
         if (name != null && !name.isEmpty()) alumni.setName(name);
         if (email != null && !email.isEmpty()) alumni.setEmail(email);
         if (major != null && !major.isEmpty()) alumni.setMajor(major);
 
-        // Parse enrollment year safely
         if (yearStr != null && !yearStr.isEmpty()) {
             try {
                 int year = Integer.parseInt(yearStr.trim());
@@ -215,24 +211,19 @@ public class AlumniController extends HttpServlet {
                     alumni.setEnrollmentYear(year);
                 }
             } catch (NumberFormatException e) {
-                // Invalid year input, ignore or log
                 System.out.println("Invalid enrollment year: " + yearStr);
             }
         }
 
-        // Update alumni details in DB
         alumni.updateAlumni();
 
-        // Update session with refreshed alumni object
         request.getSession().setAttribute("user", alumni);
 
-        // Handle password change if provided
         if (newPass != null && !newPass.isEmpty()) {
             alumni.setPassword(newPass);
             alumni.updatePassword(newPass);
         }
 
-        // Prepare attributes for profile view
         request.setAttribute("user", alumni);
         request.setAttribute("success", "Profil berhasil diperbarui");
         request.setAttribute("profileComplete", alumni.isProfileComplete());

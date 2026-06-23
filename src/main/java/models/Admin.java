@@ -73,7 +73,7 @@ public class Admin extends User implements Searching {
             connect();
             if (conn == null) return false;
             
-            // Insert into users table
+            
             String sqlUser = "INSERT INTO users (id_user, name, email, password, role) VALUES (?, ?, ?, ?, 'admin')";
             PreparedStatement psUser = conn.prepareStatement(sqlUser);
             psUser.setString(1, admin.getIdUser());
@@ -82,7 +82,7 @@ public class Admin extends User implements Searching {
             psUser.setString(4, hashPassword(admin.getPassword()));
             psUser.executeUpdate();
 
-            // Insert into admin table
+            
             String sqlAdmin = "INSERT INTO admin (id_user, jabatan) VALUES (?, ?)";
             PreparedStatement psAdmin = conn.prepareStatement(sqlAdmin);
             psAdmin.setString(1, admin.getIdUser());
@@ -141,10 +141,7 @@ public class Admin extends User implements Searching {
         return list;
     }
 
-    /**
-     * Retrieve paginated list of alumni with optional offset and limit.
-     * Uses SQL LIMIT/OFFSET for efficient data fetching.
-     */
+   
     public java.util.List<Alumni> getDaftarAlumniPaginated(int offset, int limit) {
         java.util.List<Alumni> list = new java.util.ArrayList<>();
         String sql = "SELECT u.id_user, u.name, u.email, u.password, u.role, "
@@ -243,10 +240,7 @@ public class Admin extends User implements Searching {
     }
 
    
-    /**
-    * Retrieve aggregated dashboard statistics in a single query to reduce round trips.
-    * Returns a map with keys: "totalAlumni", "alumniAktif", "emailSent".
-    */
+ 
     public Map<String, Integer> getDashboardStats() {
         try {
             connect();

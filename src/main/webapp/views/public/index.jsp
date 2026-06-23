@@ -7,7 +7,6 @@
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>SiAlumni - Sistem Informasi Alumni Terintegrasi</title>
-            <!-- CSS Link - Path Dioptimalkan untuk struktur folder Anda -->
             <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style_index.css">
             <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
             <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/assets/img/favicon.ico">

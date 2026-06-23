@@ -86,7 +86,7 @@ public class AdminController extends HttpServlet {
         int alumniAktif = stats.getOrDefault("alumniAktif", 0);
         int emailTerkirim = stats.getOrDefault("emailSent", 0);
 
-        // Fetch only the first 10 alumni for dashboard overview (efficient paginated query)
+      
         List<Alumni> recentAlumni = admin.getDaftarAlumniPaginated(0, 10);
 
         request.setAttribute("totalAlumni", totalAlumni);
@@ -122,7 +122,7 @@ public class AdminController extends HttpServlet {
             daftarAlumni = filtered;
         }
 
-        // Pagination parameters
+        
         int page = 1;
         String pageParam = request.getParameter("page");
         if (pageParam != null && !pageParam.isEmpty()) {
@@ -255,16 +255,16 @@ public class AdminController extends HttpServlet {
             throws IOException {
 
         String idAlumni = request.getParameter("id_alumni");
-        // Retrieve additional form data for email notification
+       
         String alumniName = request.getParameter("alumni_name");
         String alumniEmail = request.getParameter("alumni_email");
         String deleteReason = request.getParameter("delete_reason");
         String deleteDetail = request.getParameter("delete_detail");
 
-        // Perform deletion
+        
         boolean success = admin.deleteAlumni(idAlumni);
 
-        // If deletion succeeded and email info is present, send notification email
+       
         if (success && alumniEmail != null && !alumniEmail.isEmpty()) {
             String subject = "Pemberitahuan Penghapusan Akun SiAlumni";
             StringBuilder bodyBuilder = new StringBuilder();

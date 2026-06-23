@@ -18,11 +18,7 @@ public class Alumni extends User implements Searching {
     private String statusLabel;
     private String statusClass;
     private String statusCode;
-    // private java.sql.Timestamp lastUpdateTime;
-    // private String lastUpdateHumanReadable;
-    // private java.sql.Timestamp lastUpdateTime;
-    // private String lastUpdateHumanReadable;
-
+    
 
     public Alumni() {
         super();
@@ -81,7 +77,7 @@ public class Alumni extends User implements Searching {
         try {
             connect();
             if (conn == null) return false;
-            // update tabel users
+            
             String sqlUser = "UPDATE users SET name = ?, email = ? WHERE id_user = ?";
             PreparedStatement psUser = conn.prepareStatement(sqlUser);
             psUser.setString(1, getName());
@@ -228,9 +224,7 @@ public class Alumni extends User implements Searching {
             && getEmail() != null && !getEmail().isEmpty();
     }
 
-    /**
-     * Returns true if the alumni has at least one job experience recorded.
-     */
+    
     public boolean hasJobHistory() {
         return countJobs() > 0;
     }
@@ -238,9 +232,6 @@ public class Alumni extends User implements Searching {
   
 
 
-    /**
-     * Fetch recent job experiences limited by count.
-     */
     public List<JobExperience> getRecentJobExperience(int limit) {
         List<JobExperience> list = new ArrayList<>();
         try {
@@ -277,9 +268,7 @@ public class Alumni extends User implements Searching {
         return list;
     }
 
-    /**
-     * Count active (ongoing) jobs for this alumni.
-     */
+   
     public int countActiveJobs() {
         int count = 0;
         try {
@@ -319,15 +308,7 @@ public class Alumni extends User implements Searching {
     public String getStatusCode() { return statusCode; }
     public void setStatusCode(String statusCode) { this.statusCode = statusCode; }
 
-    // public java.sql.Timestamp getLastUpdateTime() { return lastUpdateTime; }
-    // public void setLastUpdateTime(java.sql.Timestamp lastUpdateTime) { this.lastUpdateTime = lastUpdateTime; }
-
-    // public String getLastUpdateHumanReadable() { return lastUpdateHumanReadable; }
-    // public void setLastUpdateHumanReadable(String lastUpdateHumanReadable) { this.lastUpdateHumanReadable = lastUpdateHumanReadable; }
-
-        /**
-     * Count total jobs for this alumni using a lightweight query.
-     */
+    
     public int countJobs() {
         int total = 0;
         try {

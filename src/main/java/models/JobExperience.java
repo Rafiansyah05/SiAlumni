@@ -35,15 +35,14 @@ public class JobExperience extends JDBC implements GenerateID {
     
         @Override
 public String generateID() {
-    // Generate ID in format job-xxx where xxx starts from 010 and increments sequentially
     try {
-        // Ensure connection is available
+
         connect();
-        if (conn == null) return "job-010"; // fallback if connection fails
+        if (conn == null) return "job-010"; 
         String sql = "SELECT id_job FROM job_experience ORDER BY id_job DESC LIMIT 1";
         PreparedStatement ps = conn.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
-        int nextNum = 10; // start from 010
+        int nextNum = 10; 
         if (rs.next()) {
             String lastId = rs.getString("id_job");
             if (lastId != null && lastId.startsWith("job-")) {
@@ -51,7 +50,6 @@ public String generateID() {
                     int num = Integer.parseInt(lastId.substring(4));
                     nextNum = num + 1;
                 } catch (NumberFormatException e) {
-                    // ignore and use default
                 }
             }
         }
@@ -113,7 +111,6 @@ public String generateID() {
         try {
             connect();
             if (conn == null) return false;
-            // ambil company lama untuk mengupdate statistik jika berubah
             String oldCompanyId = null;
             String selSql = "SELECT id_company FROM job_experience WHERE id_job = ?";
             PreparedStatement selPs = conn.prepareStatement(selSql);
@@ -132,18 +129,18 @@ public String generateID() {
             ps.setString(6, this.idJobExperience);
             int rows = ps.executeUpdate();
 
-            // update jumlah_alumni untuk company lama dan company baru
+           
             try {
                 String sqlUpdateCompany = "UPDATE companies SET jumlah_alumni = "
                                         + "(SELECT COUNT(DISTINCT id_alumni) FROM job_experience WHERE id_company = ?) "
                                         + "WHERE id_company = ?";
                 PreparedStatement psCompany = conn.prepareStatement(sqlUpdateCompany);
-                // update for new company
+              
                 psCompany.setString(1, this.company.getIdCompany());
                 psCompany.setString(2, this.company.getIdCompany());
                 psCompany.executeUpdate();
 
-                // update for old company if different
+                
                 if (oldCompanyId != null && !oldCompanyId.equals(this.company.getIdCompany())) {
                     psCompany.setString(1, oldCompanyId);
                     psCompany.setString(2, oldCompanyId);

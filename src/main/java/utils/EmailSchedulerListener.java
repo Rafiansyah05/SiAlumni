@@ -22,7 +22,6 @@ public class EmailSchedulerListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        // Run check every 1 minute, with an initial delay of 1 minute
         scheduler.scheduleAtFixedRate(this::checkAndSendEmails, 1, 1, TimeUnit.MINUTES);
         System.out.println("EmailSchedulerListener initialized successfully.");
     }
@@ -55,7 +54,7 @@ public class EmailSchedulerListener implements ServletContextListener {
                     requiredMs = setting.getIntervalValue() * 60L * 1000L;
                 } else if ("hours".equals(setting.getIntervalUnit())) {
                     requiredMs = setting.getIntervalValue() * 60L * 60L * 1000L;
-                } else { // "days"
+                } else { 
                     requiredMs = setting.getIntervalValue() * 24L * 60L * 60L * 1000L;
                 }
                 if (diffMs >= requiredMs) {
@@ -65,14 +64,12 @@ public class EmailSchedulerListener implements ServletContextListener {
 
             if (shouldRun) {
                 System.out.println("Auto email scheduler running at: " + new Timestamp(now));
-                // 1. Update last_run immediately to avoid duplicate runs
+            
                 SchedulerSetting.updateLastRun();
 
-                // 2. Fetch target alumni
                 ArrayList<Alumni> targets = getTargetAlumni();
                 System.out.println("Sending auto emails to " + targets.size() + " alumni...");
 
-                // 3. Send emails
                 for (Alumni alumni : targets) {
                     EmailNotification notif = new EmailNotification(
                         alumni.getEmail(),

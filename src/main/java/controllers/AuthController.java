@@ -78,18 +78,18 @@ public class AuthController extends HttpServlet {
                 session.setAttribute("user", admin);
                 session.setAttribute("role", "admin");
                 session.setAttribute("userName", admin.getName());
-                session.setMaxInactiveInterval(30 * 60); // 30 menit
+                session.setMaxInactiveInterval(30 * 60); 
                 response.sendRedirect(request.getContextPath() + "/admin/dashboard");
                 return;
             } else if ("alumni".equals(loginUser.getRole())) {
-                // Load alumni details and set session
+          
                 Alumni alumni = new Alumni();
                 alumni.setIdUser(loginUser.getIdUser());
                 alumni.setName(loginUser.getName());
                 alumni.setEmail(loginUser.getEmail());
                 alumni.setPassword(loginUser.getPassword());
                 alumni.setRole("alumni");
-                // Retrieve additional alumni data (enrollment year, major, job count)
+               
                 alumni = getAlumniData(alumni);
                 HttpSession session = request.getSession();
                 session.setAttribute("user", alumni);

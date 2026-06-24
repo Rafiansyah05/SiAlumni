@@ -129,7 +129,7 @@ public class AlumniController extends HttpServlet {
         JobExperience job = new JobExperience(industri, jabatan, startDate, endDate, company);
 
         
-        boolean success = alumni.addJob(job);
+        alumni.addJob(job);
 
        
         request.getSession().setAttribute("user", alumni);

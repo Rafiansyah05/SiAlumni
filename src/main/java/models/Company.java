@@ -17,7 +17,6 @@ public class Company extends JDBC implements GenerateID, interfaces.Searching {
     private String location;
     private java.util.ArrayList<Alumni> daftarAlumni;
     private int jumlahAlumni;
-    private static int compCounter = 10;
 
     public Company() {
         this.daftarAlumni = new java.util.ArrayList<>();

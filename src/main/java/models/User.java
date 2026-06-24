@@ -10,7 +10,6 @@ import java.sql.SQLException;
 
 
 public class User extends JDBC implements GenerateID {
-
  
     private String idUser;
     private String name;

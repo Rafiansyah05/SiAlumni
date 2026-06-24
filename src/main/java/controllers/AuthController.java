@@ -9,11 +9,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.*;
-import java.util.UUID;
-import java.util.List;
-import java.util.ArrayList;
-import models.JobExperience;
-import models.Company;
 
 
 @WebServlet("/auth")

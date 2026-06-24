@@ -9,12 +9,10 @@ import java.util.List;
 
 
 public class Alumni extends User implements Searching {
-
-
-    private int    enrollmentYear;
+    private int enrollmentYear;
     private String major;
     private ArrayList<JobExperience> jobExperience;
-    private int    jumlahJob;
+    private int jumlahJob;
     private String statusLabel;
     private String statusClass;
     private String statusCode;

@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
+import java.sql.ResultSet;
 
 
 public class Company extends JDBC implements GenerateID, interfaces.Searching {
@@ -42,8 +42,30 @@ public class Company extends JDBC implements GenerateID, interfaces.Searching {
 
     @Override
     public String generateID() {
-        compCounter++;
-        return "comp-" + String.format("%03d", compCounter);
+        int next = 1;
+        try {
+            connect();
+            String sql = "SELECT id_company FROM companies";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            int max = 0;
+            while (rs.next()) {
+                String id = rs.getString("id_company");
+                if (id != null && id.startsWith("comp-")) {
+                    String numPart = id.substring(5);
+                    try {
+                        int val = Integer.parseInt(numPart);
+                        if (val > max) max = val;
+                    } catch (NumberFormatException ignore) {}
+                }
+            }
+            next = max + 1;
+        } catch (SQLException e) {
+            System.out.println("Error generating company ID: " + e.getMessage());
+        } finally {
+            disconnect();
+        }
+        return String.format("comp-%03d", next);
     }
 
     @Override

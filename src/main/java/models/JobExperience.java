@@ -7,7 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
-import java.util.UUID;
 
 
 public class JobExperience extends JDBC implements GenerateID {
@@ -38,28 +37,29 @@ public String generateID() {
     try {
 
         connect();
-        if (conn == null) return "job-010"; 
-        String sql = "SELECT id_job FROM job_experience ORDER BY id_job DESC LIMIT 1";
+        if (conn == null) return "job-001";
+        int max = 0;
+        String sql = "SELECT id_job FROM job_experience";
         PreparedStatement ps = conn.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
-        int nextNum = 10; 
-        if (rs.next()) {
-            String lastId = rs.getString("id_job");
-            if (lastId != null && lastId.startsWith("job-")) {
+        while (rs.next()) {
+            String id = rs.getString("id_job");
+            if (id != null && id.startsWith("job-")) {
                 try {
-                    int num = Integer.parseInt(lastId.substring(4));
-                    nextNum = num + 1;
-                } catch (NumberFormatException e) {
-                }
+                    int val = Integer.parseInt(id.substring(4));
+                    if (val > max) max = val;
+                } catch (NumberFormatException ignore) {}
             }
         }
         rs.close();
         ps.close();
-        disconnect();
+        int nextNum = max + 1;
         return "job-" + String.format("%03d", nextNum);
     } catch (Exception e) {
         System.out.println("Error generating job ID: " + e.getMessage());
-        return "job-010";
+        return "job-001";
+    } finally {
+        disconnect();
     }
 }
     

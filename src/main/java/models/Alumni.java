@@ -138,32 +138,57 @@ public class Alumni extends User implements Searching {
 
     
     public boolean deleteJob(String idJob) {
-        try {
-            connect();
-            if (conn == null) return false;
-            String sql = "DELETE FROM job_experience WHERE id_job = ? AND id_alumni = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, idJob);
-            ps.setString(2, getIdUser());
-            int rows = ps.executeUpdate();
+    try {
+        connect();
+        if (conn == null) return false;
 
-            if (rows > 0) {
-                
-                this.jumlahJob = Math.max(0, this.jumlahJob - 1);
-                String sqlUpdate = "UPDATE alumni SET jumlah_job = ? WHERE id_user = ?";
-                PreparedStatement psUpdate = conn.prepareStatement(sqlUpdate);
-                psUpdate.setInt(1, this.jumlahJob);
-                psUpdate.setString(2, getIdUser());
-                psUpdate.executeUpdate();
-                return true;
+        // Ambil id_company sebelum dihapus
+        String companyId = null;
+        String selSql = "SELECT id_company FROM job_experience WHERE id_job = ? AND id_alumni = ?";
+        PreparedStatement selPs = conn.prepareStatement(selSql);
+        selPs.setString(1, idJob);
+        selPs.setString(2, getIdUser());
+        ResultSet rs = selPs.executeQuery();
+        if (rs.next()) companyId = rs.getString("id_company");
+        rs.close();
+        selPs.close();
+
+        // Hapus job
+        String sql = "DELETE FROM job_experience WHERE id_job = ? AND id_alumni = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, idJob);
+        ps.setString(2, getIdUser());
+        int rows = ps.executeUpdate();
+
+        if (rows > 0) {
+            // Update jumlah_job alumni
+            this.jumlahJob = Math.max(0, this.jumlahJob - 1);
+            String sqlUpdate = "UPDATE alumni SET jumlah_job = ? WHERE id_user = ?";
+            PreparedStatement psUpdate = conn.prepareStatement(sqlUpdate);
+            psUpdate.setInt(1, this.jumlahJob);
+            psUpdate.setString(2, getIdUser());
+            psUpdate.executeUpdate();
+
+            // Update jumlah_alumni di companies ← ini yang kurang
+            if (companyId != null) {
+                String sqlUpdateCompany = "UPDATE companies SET jumlah_alumni = "
+                    + "(SELECT COUNT(DISTINCT id_alumni) FROM job_experience WHERE id_company = ?) "
+                    + "WHERE id_company = ?";
+                PreparedStatement psCompany = conn.prepareStatement(sqlUpdateCompany);
+                psCompany.setString(1, companyId);
+                psCompany.setString(2, companyId);
+                psCompany.executeUpdate();
             }
-        } catch (SQLException e) {
-            System.out.println("Error delete job: " + e.getMessage());
-        } finally {
-            disconnect();
+
+            return true;
         }
-        return false;
+    } catch (SQLException e) {
+        System.out.println("Error delete job: " + e.getMessage());
+    } finally {
+        disconnect();
     }
+    return false;
+}
 
   
     public ArrayList<JobExperience> getJobExperience() {

@@ -36,8 +36,8 @@ src/
 Clone repository:
 
 ```bash
-git clone https://github.com/[username]/[repository-name]
-cd [repository-name]
+git clone https://github.com/Rafiansyah05/SiAlumni.git
+cd SiAlumni
 ```
 
 ---

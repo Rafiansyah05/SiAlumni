@@ -36,11 +36,32 @@ public class User extends JDBC implements GenerateID {
         this.role     = role;
     }
 
-    private static int counter = 100;
     @Override
     public String generateID() {
-        counter++;
-        return "alm-" + counter;
+        int next = 1;
+        try {
+            connect();
+            String sql = "SELECT id_user FROM users";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            int max = 0;
+            while (rs.next()) {
+                String id = rs.getString("id_user");
+                if (id != null && id.startsWith("alm-")) {
+                    String numPart = id.substring(4);
+                    try {
+                        int val = Integer.parseInt(numPart);
+                        if (val > max) max = val;
+                    } catch (NumberFormatException ignore) {}
+                }
+            }
+            next = max + 1;
+        } catch (SQLException e) {
+            System.out.println("Error generating ID: " + e.getMessage());
+        } finally {
+            disconnect();
+        }
+        return String.format("alm-%03d", next);
     }
 
     public static String hashPassword(String password) {

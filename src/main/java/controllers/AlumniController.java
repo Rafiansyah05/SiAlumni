@@ -98,16 +98,7 @@ public class AlumniController extends HttpServlet {
         request.getRequestDispatcher("/views/alumni/profile.jsp").forward(request, response);
     }
 
-    
-    private void showJobs(HttpServletRequest request, HttpServletResponse response, Alumni alumni)
-            throws ServletException, IOException {
-        ArrayList<JobExperience> jobs = alumni.getJobExperience();
-        request.setAttribute("jobs", jobs);
-        request.setAttribute("allCompanies", Company.getAllCompanies());
-        request.getRequestDispatcher("/views/alumni/profile.jsp").forward(request, response);
-    }
 
-   
     private void handleAddJob(HttpServletRequest request, HttpServletResponse response, Alumni alumni)
             throws IOException {
         String companyName = request.getParameter("company_name");
@@ -138,9 +129,7 @@ public class AlumniController extends HttpServlet {
         JobExperience job = new JobExperience(industri, jabatan, startDate, endDate, company);
 
         
-        boolean success = alumni.addJob(job);
-
-       
+        alumni.addJob(job);
         request.getSession().setAttribute("user", alumni);
         response.sendRedirect(request.getContextPath() + "/alumni/profile");
     }

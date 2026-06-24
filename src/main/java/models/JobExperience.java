@@ -158,22 +158,44 @@ public String generateID() {
 
    
     public boolean delete() {
-        try {
-            connect();
-            if (conn == null) return false;
+    try {
+        connect();
+        if (conn == null) return false;
 
-            String sql = "DELETE FROM job_experience WHERE id_job = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, this.idJobExperience);
-            int rows = ps.executeUpdate();
-            return rows > 0;
-        } catch (Exception e) {
-            System.out.println("Error delete job: " + e.getMessage());
-            return false;
-        } finally {
-            disconnect();
+        // Ambil id_company sebelum dihapus
+        String companyId = null;
+        String selSql = "SELECT id_company FROM job_experience WHERE id_job = ?";
+        PreparedStatement selPs = conn.prepareStatement(selSql);
+        selPs.setString(1, this.idJobExperience);
+        ResultSet rs = selPs.executeQuery();
+        if (rs.next()) companyId = rs.getString("id_company");
+        rs.close();
+        selPs.close();
+
+        String sql = "DELETE FROM job_experience WHERE id_job = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, this.idJobExperience);
+        int rows = ps.executeUpdate();
+
+        // Update jumlah_alumni setelah delete
+        if (rows > 0 && companyId != null) {
+            String sqlUpdateCompany = "UPDATE companies SET jumlah_alumni = "
+                + "(SELECT COUNT(DISTINCT id_alumni) FROM job_experience WHERE id_company = ?) "
+                + "WHERE id_company = ?";
+            PreparedStatement psCompany = conn.prepareStatement(sqlUpdateCompany);
+            psCompany.setString(1, companyId);
+            psCompany.setString(2, companyId);
+            psCompany.executeUpdate();
         }
+
+        return rows > 0;
+    } catch (Exception e) {
+        System.out.println("Error delete job: " + e.getMessage());
+        return false;
+    } finally {
+        disconnect();
     }
+}
 
     @Override
     public String getProfile() {
